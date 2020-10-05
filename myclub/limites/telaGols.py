@@ -12,7 +12,7 @@ class TelaGols(TelaAbstract):
             [sg.Listbox(values=(gols), size=(140, 46), font='Fixedsys 15', pad=(None), key='partida')],
             [sg.Submit('Voltar', font='Arial 10', size=(5, 1), key='back')]
         ]
-        self.__window = sg.Window('Partidas', element_justification='l', size=(800, 850)).Layout(layout)
+        self.__window = sg.Window('Artilharia', element_justification='l', size=(800, 850)).Layout(layout)
 
     def abre_tela(self, gols):
         self.configura(gols)
