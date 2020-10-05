@@ -19,8 +19,7 @@ class TelaCadastraPartida(TelaAbstract):
             [sg.Submit('Confirmar', font='Arial 12', size=(10, 1), key='confirma')]
         ]
         layout.extend(self.voltar())
-        self.__window = sg.Window('Partidas', element_justification='left', size=(800, 850),
-                                  font='Arial 24').Layout(layout)
+        self.__window = sg.Window('Partidas', element_justification='left', size=(800, 850), icon='icon.ico').Layout(layout)
 
     def abre_tela(self, dados_partida, jogadores, presentes):
         self.configura(dados_partida, jogadores, presentes)
