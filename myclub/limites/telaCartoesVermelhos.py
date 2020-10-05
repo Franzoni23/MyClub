@@ -8,8 +8,7 @@ class TelaCartoesVermelhos(TelaAbstract):
     def configura(self, cartoes_vermelhos):
         sg.ChangeLookAndFeel('SystemDefault'),
         layout = [
-            [sg.Text('Cartões Vermelhos', font='Arial 28')],
-            [sg.Listbox(values=(cartoes_vermelhos), size=(140, 46), font='Fixedsys 15', pad=(None), key='partida')],
+            [sg.Listbox(values=(cartoes_vermelhos), size=(140, 50), font='Fixedsys 15', pad=(None), key='partida')],
             [sg.Submit('Voltar', font='Arial 10', size=(5, 1), key='back')]
         ]
         self.__window = sg.Window('Cartões Vermelhos', element_justification='l', size=(800, 850), icon='icon.ico').Layout(layout)
