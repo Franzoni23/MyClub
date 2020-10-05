@@ -15,7 +15,7 @@ class TelaInicial(TelaAbstract):
             sg.Submit('Excluir', font='Arial 10', size=(5, 1), key='2'),
             sg.Submit('Alterar', font='Arial 10', size=(5, 1), key='3')]
         ]
-        self.__window = sg.Window('MyClub', element_justification='l', size=(800, 850), icon='myclub/icon.ico').Layout(layout)
+        self.__window = sg.Window('MyClub', element_justification='l', size=(800, 850), icon='icon.ico').Layout(layout)
 
     def abre_tela(self, jogadores):
         self.configura(jogadores)
