@@ -29,6 +29,12 @@ class ControladorPrincipal:
     def voltar(self):
         self.opcoes()
     
+    def qtd_jogadores(self):
+        qtd = 0
+        for jogador in self.jogadores.get_all():
+            qtd = qtd + 1
+        return qtd
+    
     def listar_goleiros(self):
         lista_print = []
         for jogador in self.__jogadores.get_all():  
@@ -176,8 +182,9 @@ class ControladorPrincipal:
     
     def opcoes(self):
         jogadores = self.listar_jogadores()
+        qtd_jogadores = self.qtd_jogadores()
         opcoes = {'1': self.criar_jogador, '2': self.excluir_jogador, '3':self.alterar_jogador, '4':self.__sistema_geral.partidas_jogadas, '5':self.__sistema_geral.gols, '6':self.__sistema_geral.cartoes_amarelos, '7':self.__sistema_geral.cartoes_vermelhos, None:self.finalizar}
-        button, values = self.__tela.abre_tela(jogadores)
+        button, values = self.__tela.abre_tela(jogadores, qtd_jogadores)
         opçao_escolhida = opcoes[button]
         if button == '1':
             opçao_escolhida = opcoes[button]('vazio')

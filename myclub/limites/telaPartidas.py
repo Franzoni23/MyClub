@@ -5,7 +5,7 @@ class TelaPartidas(TelaAbstract):
     def __init__(self):
         self.__window = None
 
-    def configura(self, partidas):
+    def configura(self, partidas, qtd_partidas):
         sg.ChangeLookAndFeel('SystemDefault'),
         layout = [
             [sg.Listbox(values=(partidas), size=(140, 48), font='Fixedsys 15', pad=(None), key='partida')],
@@ -14,10 +14,10 @@ class TelaPartidas(TelaAbstract):
             sg.Submit('Alterar', font='Arial 10', size=(5, 1), key='3')],
             [sg.Submit('Voltar', font='Arial 10', size=(5, 1), key='back')]
         ]
-        self.__window = sg.Window('Partidas Jogadas', element_justification='l', size=(800, 850), icon='icon.ico').Layout(layout)
+        self.__window = sg.Window('Partidas Jogadas' + '(' + str(qtd_partidas) + ')', element_justification='l', size=(800, 850), icon='icon.ico').Layout(layout)
 
-    def abre_tela(self, partidas):
-        self.configura(partidas)
+    def abre_tela(self, partidas, qtd_partidas):
+        self.configura(partidas, qtd_partidas)
         button, values = self.__window.Read()
         self.__window.Close()
         return (button), values
