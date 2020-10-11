@@ -59,7 +59,7 @@ class ControladorPrincipal:
                 gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'G'
+                posicao = 'L'
                 qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                      
         lista_print.sort()
@@ -74,7 +74,7 @@ class ControladorPrincipal:
                 gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'G'
+                posicao = 'Z'
                 qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                        
         lista_print.sort()
@@ -89,7 +89,7 @@ class ControladorPrincipal:
                gols = self.__sistema_geral.controlador_partida.gols(jogador)
                nome = jogador.nome.ljust(46)
                idade = jogador.idade
-               posicao = 'G'
+               posicao = 'V'
                qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                        
         lista_print.sort()
@@ -104,7 +104,7 @@ class ControladorPrincipal:
                 gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'G'
+                posicao = 'M'
                 qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                      
         lista_print.sort()
@@ -119,7 +119,7 @@ class ControladorPrincipal:
                 gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'G'
+                posicao = 'A'
                 qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                       
         lista_print.sort()
