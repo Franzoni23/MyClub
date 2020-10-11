@@ -137,22 +137,28 @@ class ControladorPrincipal:
     
     def listar_gols(self):
         lista_print = []
-        for jogador in self.jogadores.get_all():
-                lista_print.append(jogador.gols + ' - ' + jogador.nome)
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                gols = self.__sistema_geral.controlador_partida.gols(presente)
+                lista_print.append(str(gols) + ' - ' + str(presente.nome))
         lista_print.sort(reverse=True)
         return lista_print
 
     def listar_cartoes_amarelos(self):
         lista_print = []
-        for jogador in self.jogadores.get_all():
-                lista_print.append(jogador.cartoes_amarelos + ' - ' + jogador.nome)
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(presente)
+                lista_print.append(str(cartoes_amarelos) + ' - ' + str(presente.nome))
         lista_print.sort(reverse=True)
         return lista_print
 
     def listar_cartoes_vermelhos(self):
         lista_print = []
-        for jogador in self.jogadores.get_all():
-                lista_print.append(jogador.cartoes_vermelhos + ' - ' + jogador.nome)
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(presente)
+                lista_print.append(str(cartoes_vermelhos) + ' - ' + str(presente.nome))
         lista_print.sort(reverse=True)
         return lista_print
     
