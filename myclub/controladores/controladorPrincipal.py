@@ -7,7 +7,6 @@ from myclub.limites.telaCartoesVermelhos import TelaCartoesVermelhos
 from myclub.limites.telaCadastraJogador import TelaCadastraJogador
 import sys
 import datetime
-import copy
 
 
 class ControladorPrincipal:

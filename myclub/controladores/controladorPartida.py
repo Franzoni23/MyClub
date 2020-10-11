@@ -6,7 +6,6 @@ from myclub.limites.telaPartidasJogador import TelaPartidasJogador
 from myclub.limites.telaCadastraPartida import TelaCadastraPartida
 from operator import attrgetter
 import sys
-import copy
 
 
 class ControladorPartida:
@@ -18,6 +17,7 @@ class ControladorPartida:
         self.__partidas = PartidasDAO()
         self.__presentes = []
         self.__presentes_tela = []
+        self.__gols_mandante = 0
     
     @property
     def partidas(self):
@@ -30,6 +30,14 @@ class ControladorPartida:
     @property
     def presentes_tela(self):
         return self.__presentes_tela
+    
+    @property
+    def gols_mandante(self):
+        return self.__gols_mandante
+
+    @gols_mandante.setter
+    def gols_mandante(self, gols_mandante):
+        self.__gols_mandante = gols_mandante
 
     def finalizar(self):
         sys.exit(0)
@@ -249,7 +257,7 @@ class ControladorPartida:
         button, values = self.__tela.abre_tela(partidas, qtd_partidas)
         opçao_escolhida = opcoes[button]
         if button == '1':
-            opçao_escolhida = opcoes[button]('vazio', self.presentes_tela)
+            opçao_escolhida = opcoes[button]('vazio', self.presentes_tela, self.gols_mandante)
         if button == '2' or button == '3':
             opçao_escolhida = opcoes[button](values['partida'])
         opçao_escolhida() 
@@ -290,22 +298,21 @@ class ControladorPartida:
         if button == 'back':
             self.voltar_inicio()
 
-    def criar_partida(self, dados_partida, presentes_tela):
+    def criar_partida(self, dados_partida, presentes_tela, gols_mandante):
         if dados_partida == 'vazio':
             dados = {'gols_mandante': '', 'gols_adversario': '', 'adversario': '', 'data': ''}
         else:
             dados = dados_partida
         jogadores = self.__sistema_geral.controlador_principal.listar_jogadores()
-        button, values = self.__tela_cadastro.abre_tela(dados, jogadores, presentes_tela)
+        button, values = self.__tela_cadastro.abre_tela(dados, jogadores, presentes_tela, gols_mandante)
         #Dados do imput
         mandante = 'Inter do Carianos'
         adversario = values['1']
-        gols_mandante = values['2']
         gols_adversario = values['3']
         data = values['4']
         casa = values['5']
         fora = values['6']
-        dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
+        dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
         if button == 'adiciona':
             gols = values['go']
             ca = values['ca']
@@ -321,13 +328,13 @@ class ControladorPartida:
         #Valida data
         if data == '':
             self.__tela.popup_ok('Escolha a data.')
-            dados_partida = {'data': '', 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida(dados_partida, presentes_tela)
+            dados_partida = {'data': '', 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida(dados_partida, presentes_tela, gols_mandante)
         for partida in self.partidas.get_all():
             if partida.data == data:
                 self.__tela.popup_ok('Já existe outra partida nessa data.')
-                dados_partida = {'data': '', 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-                self.criar_partida(dados_partida, presentes_tela)
+                dados_partida = {'data': '', 'gols_adversario': gols_adversario, 'adversario': adversario}
+                self.criar_partida(dados_partida, presentes_tela, gols_mandante)
         #Ajeita Nome
         preposicoes = ['da', 'de', 'di', 'do', 'du', 'para']
         partes_nome = []
@@ -339,33 +346,30 @@ class ControladorPartida:
         #Valida Resultado:
         numeros = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         todos_int = True
-        todos_int2 = True
-        for gol in gols_mandante:
-            if gol not in numeros:
-                todos_int = False
         for gol in gols_adversario:
             if gol not in numeros:
-                todos_int2 = False
-        if todos_int == False or todos_int2 == False or gols_mandante == '' or gols_adversario == '':
+                todos_int = False
+        if todos_int == False or gols_adversario == '':
             self.__tela_cadastro.popup_ok('Digite apenas números válidos no resultado da partida.')
-            dados_partida = {'data': data, 'gols_mandante': '', 'gols_adversario': '', 'adversario': adversario}
-            self.criar_partida(dados_partida, presentes_tela)
+            dados_partida = {'data': data, 'gols_adversario': '', 'adversario': adversario}
+            self.criar_partida(dados_partida, presentes_tela, gols_mandante)
         #Define local:
         if casa is True and fora is True:
             self.__tela.popup_ok('Você deve selecionar apenas um local.')
             dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida(dados_partida, presentes_tela)
+            self.criar_partida(dados_partida, presentes_tela, gols_mandante)
         if casa is False and fora is False:
             self.__tela.popup_ok('Você deve selecionar um local.')
             dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida(dados_partida, presentes_tela)
+            self.criar_partida(dados_partida, presentes_tela, gols_mandante)
         if casa is True and fora is False:
             local = 'Casa'
         if casa is False and fora is True:
             local = 'Fora'
         if button == 'confirma':
-            presentes = copy.copy(self.presentes)
-            presentes_tela = copy.copy(self.presentes_tela)
+            presentes = self.presentes
+            presentes_tela = self.presentes_tela
+            gols_mandante = self.gols_mandante
             nova_partida = Partida(local, data, data[:2], data[3:5], data[6:10], gols_mandante, gols_adversario, mandante, adversario, presentes, presentes_tela)
             nova_partida.listar_gols()
             nova_partida.listar_cartoes_amarelos()
@@ -377,7 +381,7 @@ class ControladorPartida:
     def adiciona_presente(self, jogador, dados_jogador, dados_partida):
         if jogador == []:
             self.__tela_cadastro.popup_ok('Selecione um jogador para adicionar.')
-            self.criar_partida(dados_partida, self.presentes_tela)
+            self.criar_partida(dados_partida, self.presentes_tela, self.gols_mandante)
         jogador_key = jogador[0][0:2]
         jogador = self.__sistema_geral.controlador_principal.jogadores.get(jogador_key)
         nome = jogador.nome
@@ -391,6 +395,7 @@ class ControladorPartida:
         if len(self.presentes) == 0:
             self.presentes.append(jogador)
             self.presentes_tela.append(jogador.numero + " " + jogador.nome)
+            self.gols_mandante = self.__gols_mandante + gols
         else:
             for i in self.presentes:
                 if i.numero == jogador.numero:
@@ -400,7 +405,8 @@ class ControladorPartida:
             if qtd == 0:
                 self.presentes.append(jogador)
                 self.presentes_tela.append(jogador.numero + " " + jogador.nome)
-        self.criar_partida(dados_partida, self.presentes_tela)   
+                self.__gols_mandante = self.__gols_mandante + gols
+        self.criar_partida(dados_partida, self.presentes_tela, self.gols_mandante)  
     
     def retira_presente(self, presente, dados_partida):
         if presente == []:
@@ -409,16 +415,18 @@ class ControladorPartida:
         jogador_key = presente[0][0:2]
         for jogador in self.presentes:
             if jogador.numero == jogador_key:
+                gols = jogador.gols
                 self.presentes.remove(jogador)
         for jogador in self.presentes_tela:
             if str(jogador[0:2]) == str(jogador_key):
                 self.presentes_tela.remove(jogador)
-        self.criar_partida(dados_partida, self.presentes_tela) 
+        self.__gols_mandante = self.__gols_mandante - gols
+        self.criar_partida(dados_partida, self.presentes_tela, self.gols_mandante) 
     
     def adiciona_presente2(self, jogador, dados_jogador, dados_partida, partida_key):
         if jogador == []:
             self.__tela_cadastro.popup_ok('Selecione um jogador para adicionar.')
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key)
         jogador_key = jogador[0][0:2]
         jogador = self.__sistema_geral.controlador_principal.jogadores.get(jogador_key)
         nome = jogador.nome
@@ -432,6 +440,7 @@ class ControladorPartida:
         if len(self.presentes) == 0:
             self.presentes.append(jogador)
             self.presentes_tela.append(jogador.numero + " " + jogador.nome)
+            self.gols_mandante = self.__gols_mandante + gols
         else:
             for i in self.presentes:
                 if i.numero == jogador.numero:
@@ -441,36 +450,35 @@ class ControladorPartida:
             if qtd == 0:
                 self.presentes.append(jogador)
                 self.presentes_tela.append(jogador.numero + " " + jogador.nome)
-        self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+                self.gols_mandante = int(self.__gols_mandante) + gols
+        self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.gols_mandante)
 
     def retira_presente2(self, presente, dados_partida, partida_key):
         if presente == []:
             self.__tela_cadastro.popup_ok('Selecione um jogador para retirar.')
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key)
         jogador_key = presente[0][0:2]
         for jogador in self.presentes:
             if jogador.numero == jogador_key:
-                jogador_deletar = copy.copy(self.__sistema_geral.controlador_principal.jogadores.get(jogador_key))
-                if jogador_deletar == None:
-                    jogador_deletar == 'vazio'
+                gols = jogador.gols
                 self.presentes.remove(jogador)
         for jogador in self.presentes_tela:
             if str(jogador[0:2]) == str(jogador_key):
                 self.presentes_tela.remove(jogador)
-        self.criar_partida2(dados_partida, self.presentes_tela, partida_key, jogador_deletar)
+        self.__gols_mandante = int(self.__gols_mandante) - gols
+        self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.gols_mandante)
     
-    def criar_partida2(self, dados_partida, presentes_tela, partida_key, jogador_deletar):
+    def criar_partida2(self, dados_partida, presentes_tela, partida_key, gols_mandante):
         jogadores = self.__sistema_geral.controlador_principal.listar_jogadores()
-        button, values = self.__tela_cadastro.abre_tela(dados_partida, jogadores, presentes_tela)
+        button, values = self.__tela_cadastro.abre_tela(dados_partida, jogadores, presentes_tela, gols_mandante)
         #Dados do imput
         mandante = 'Inter do Carianos'
         adversario = values['1']
-        gols_mandante = values['2']
         gols_adversario = values['3']
         data = values['4']
         casa = values['5']
         fora = values['6']
-        dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
+        dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
         if button == 'adiciona':
             gols = values['go']
             ca = values['ca']
@@ -486,13 +494,13 @@ class ControladorPartida:
         #Valida data
         if data == '':
             self.__tela.popup_ok('Escolha a data.')
-            dados_partida = {'data': '', 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, jogador_deletar)
+            dados_partida = {'data': '', 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         for partida in self.partidas.get_all():
             if partida.data == data and partida.data != partida_key:
                 self.__tela.popup_ok('Já existe outra partida nessa data.')
                 dados_partida = {'data': '', 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, jogador_deletar)
+                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         #Ajeita Nome
         preposicoes = ['da', 'de', 'di', 'do', 'du', 'para']
         partes_nome = []
@@ -504,26 +512,22 @@ class ControladorPartida:
         #Valida Resultado:
         numeros = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         todos_int = True
-        todos_int2 = True
-        for gol in gols_mandante:
-            if gol not in numeros:
-                todos_int = False
         for gol in gols_adversario:
             if gol not in numeros:
-                todos_int2 = False
-        if todos_int == False or todos_int2 == False or gols_mandante == '' or gols_adversario == '':
+                todos_int = False
+        if todos_int == False or gols_adversario == '':
             self.__tela_cadastro.popup_ok('Digite apenas números válidos no resultado da partida.')
-            dados_partida = {'data': data, 'gols_mandante': '', 'gols_adversario': '', 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, jogador_deletar)
+            dados_partida = {'data': data, 'gols_adversario': '', 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         #Define local:
         if casa is True and fora is True:
             self.__tela.popup_ok('Você deve selecionar apenas um local.')
-            dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, jogador_deletar)
+            dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         if casa is False and fora is False:
             self.__tela.popup_ok('Você deve selecionar um local.')
-            dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, jogador_deletar)
+            dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         if casa is True and fora is False:
             local = 'Casa'
         if casa is False and fora is True:
@@ -532,8 +536,9 @@ class ControladorPartida:
             decisao = self.__tela_cadastro.confirm('Você tem certeza que deseja fazer essas alterações?')
             if decisao == 'Yes':
                 self.__partidas.remove(partida_key)
-                presentes = copy.copy(self.presentes)
-                presentes_tela = copy.copy(self.presentes_tela)
+                presentes = self.presentes
+                presentes_tela = self.presentes_tela
+                gols_mandante = self.__gols_mandante
                 nova_partida = Partida(local, data, data[:2], data[3:5], data[6:10], gols_mandante, gols_adversario, mandante, adversario, presentes, presentes_tela)
                 nova_partida.listar_gols()
                 nova_partida.listar_cartoes_amarelos()
@@ -542,7 +547,7 @@ class ControladorPartida:
                 self.__tela.popup_ok('Partida alterada com sucesso!')
                 self.voltar()
             else:
-                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
     
     def alterar_partida(self, partida):
         if partida == []:
@@ -551,27 +556,27 @@ class ControladorPartida:
         jogadores = self.__sistema_geral.controlador_principal.listar_jogadores()
         partida_key = partida[0][0:10]
         partida = self.__partidas.get(partida_key)
-        dados_partida = {'data': partida.data, 'gols_mandante': partida.gols_mandante, 'gols_adversario': partida.gols_adversario, 'adversario': partida.adversario}
-        button, values = self.__tela_cadastro.abre_tela(dados_partida, jogadores, partida.presentes_tela)
+        dados_partida = {'data': partida.data, 'gols_adversario': partida.gols_adversario, 'adversario': partida.adversario}
+        button, values = self.__tela_cadastro.abre_tela(dados_partida, jogadores, partida.presentes_tela, partida.gols_mandante)
         for jogador in partida.presentes:
             self.__presentes.append(jogador)
         for jogador in partida.presentes_tela:
             self.__presentes_tela.append(jogador)
+        self.__gols_mandante = partida.gols_mandante
         #Dados do imput
         mandante = 'Inter do Carianos'
         adversario = values['1']
-        gols_mandante = values['2']
         gols_adversario = values['3']
         data = values['4']
         casa = values['5']
         fora = values['6']
-        dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
+        dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
         if button == 'adiciona':
             gols = values['go']
             ca = values['ca']
             cv = values['cv']
             dados_jogador = {'go': gols, 'ca': ca, 'cv':cv}
-            self.adiciona_presente2(values['jogador'], dados_jogador, dados_partida, partida_key)
+            self.adiciona_presente2(values['jogador'], dados_jogador, dados_partida, partida_key,)
         if button == 'retira':
             self.retira_presente2(values['presente'], dados_partida, partida_key)
         if button == None:
@@ -581,13 +586,13 @@ class ControladorPartida:
         #Valida data
         if data == '':
             self.__tela.popup_ok('Escolha a data.')
-            dados_partida = {'data': '', 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+            dados_partida = {'data': '', 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         for partida in self.partidas.get_all():
             if partida.data == data and partida.data != partida_key:
                 self.__tela.popup_ok('Já existe outra partida nessa data.')
-                dados_partida = {'data': '', 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+                dados_partida = {'data': '', 'gols_adversario': gols_adversario, 'adversario': adversario}
+                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         #Ajeita Nome
         preposicoes = ['da', 'de', 'di', 'do', 'du', 'para']
         partes_nome = []
@@ -608,17 +613,17 @@ class ControladorPartida:
                 todos_int2 = False
         if todos_int == False or todos_int2 == False or gols_mandante == '' or gols_adversario == '':
             self.__tela_cadastro.popup_ok('Digite apenas números válidos no resultado da partida.')
-            dados_partida = {'data': data, 'gols_mandante': '', 'gols_adversario': '', 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+            dados_partida = {'data': data, 'gols_adversario': '', 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         #Define local:
         if casa is True and fora is True:
             self.__tela.popup_ok('Você deve selecionar apenas um local.')
-            dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+            dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         if casa is False and fora is False:
             self.__tela.popup_ok('Você deve selecionar um local.')
-            dados_partida = {'data': data, 'gols_mandante': gols_mandante, 'gols_adversario': gols_adversario, 'adversario': adversario}
-            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+            dados_partida = {'data': data, 'gols_adversario': gols_adversario, 'adversario': adversario}
+            self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
         if casa is True and fora is False:
             local = 'Casa'
         if casa is False and fora is True:
@@ -637,7 +642,7 @@ class ControladorPartida:
                 self.__tela.popup_ok('Partida alterada com sucesso!')
                 self.voltar()
             else:
-                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
+                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, self.__gols_mandante)
                   
     def excluir_partida(self, partida):
         if partida == []:

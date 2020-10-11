@@ -6,12 +6,12 @@ class TelaCadastraPartida(TelaAbstract):
     def __init__(self):
         self.__window = None
 
-    def configura(self, dados_partida, jogadores, presentes):
+    def configura(self, dados_partida, jogadores, presentes, gols_mandante):
         sg.ChangeLookAndFeel('SystemDefault'),
         layout = [
             [sg.CalendarButton('Data:', target='4', button_color=('red', 'white'), format=('%d/%m/%Y')), sg.InputText(dados_partida['data'], key='4', visible=True, disabled=True, size=(9, 1)), sg.Checkbox('Casa', key='5', font='Arial 12', default=True), sg.Checkbox('Fora', key='6', font='Arial 12')],
             [sg.Text('')],
-            [sg.Text('Inter do Carianos', size=(14, 1)), sg.InputText(dados_partida['gols_mandante'], size =(2,1), key='2'), sg.Text(' x ', size=(2, 1)), sg.InputText(dados_partida['gols_adversario'], size =(2,1), key='3'), sg.Text(' ', size=(1, 1)), sg.InputText(dados_partida['adversario'], size=(14, 1), key='1')],
+            [sg.Text('Inter do Carianos', size=(14, 1)), sg.InputText(gols_mandante, size =(2,1), key='2', disabled=True), sg.Text(' x ', size=(2, 1)), sg.InputText(dados_partida['gols_adversario'], size =(2,1), key='3'), sg.Text(' ', size=(1, 1)), sg.InputText(dados_partida['adversario'], size=(14, 1), key='1')],
             [sg.Text('')],
             [sg.Text('              Plantel'), sg.Text('                           Presentes')],
             [sg.Listbox(values=(jogadores), size=(43, 29), font='Fixedsys 15', key='jogador'), sg.Listbox(values=(presentes), size=(43, 29), font='Fixedsys 15', key='presente')],
@@ -21,8 +21,8 @@ class TelaCadastraPartida(TelaAbstract):
         layout.extend(self.voltar())
         self.__window = sg.Window('Partida', element_justification='left', size=(800, 850), font='Arial 24', icon='icon.ico').Layout(layout)
 
-    def abre_tela(self, dados_partida, jogadores, presentes):
-        self.configura(dados_partida, jogadores, presentes)
+    def abre_tela(self, dados_partida, jogadores, presentes, gols_mandante):
+        self.configura(dados_partida, jogadores, presentes, gols_mandante)
         button, values = self.__window.Read()
         self.__window.Close()
         return button, values

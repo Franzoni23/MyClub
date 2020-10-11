@@ -4,6 +4,7 @@ class Presente:
         self.__numero = numero
         self.__cartoes_amarelos = cartoes_amarelos
         self.__cartoes_vermelhos = cartoes_vermelhos
+        self.__gols = gols
 
     @property
     def nome(self):

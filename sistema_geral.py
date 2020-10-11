@@ -47,9 +47,6 @@ class SistemaGeral:
             jogador_key = jogador[0][0:2]
             self.controlador_partida.cartoes_vermelhos_jogador(jogador_key)
 
-#Limitar gols, deixando igual a soma de presente.gols
-#Adicionar adversarios em uma lista.
-
 if __name__ == "__main__":
     sg = SistemaGeral()
     sg.inicio()
