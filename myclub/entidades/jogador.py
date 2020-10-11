@@ -8,6 +8,9 @@ class Jogador:
         self.__nascimento = nascimento
         self.__idade = None
         self.__posicao = posicao
+        self.__gols = None
+        self.__cartoes_amarelos = None
+        self.__cartoes_vermelhos = None
 
     @property
     def nome(self):
@@ -34,6 +37,18 @@ class Jogador:
         return self.__idade
     
     @property
+    def gols(self):
+        return self.__gols
+
+    @property
+    def cartoes_amarelos(self):
+        return self.__cartoes_amarelos
+
+    @property
+    def cartoes_vermelhos(self):
+        return self.__cartoes_vermelhos
+    
+    @property
     def posicao(self):
         return self.__posicao
 
@@ -52,3 +67,15 @@ class Jogador:
     @posicao.setter
     def posicao(self, nova_posicao):
         self.__posicao = nova_posicao
+
+    @gols.setter
+    def gols(self, gols):
+        self.__gols = gols
+
+    @cartoes_amarelos.setter
+    def cartoes_amarelos(self, cartoes_amarelos):
+        self.__cartoes_amarelos = cartoes_amarelos
+
+    @cartoes_vermelhos.setter
+    def cartoes_vermelhos(self, cartoes_vermelhos):
+        self.__cartoes_vermelhos = cartoes_vermelhos

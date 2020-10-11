@@ -107,7 +107,8 @@ class ControladorPartida:
             gols = '0' + str(gols)
         else:
             gols = str(gols)
-        return gols
+        jogador.gols = gols
+        return jogador.gols
     
     def cartoes_amarelos(self, jogador):
         cartoes_lista = []
@@ -122,7 +123,8 @@ class ControladorPartida:
             cartoes_amarelos = '0' + str(cartoes_amarelos)
         else:
             cartoes_amarelos = str(cartoes_amarelos)
-        return cartoes_amarelos
+        jogador.cartoes_amarelos = cartoes_amarelos
+        return jogador.cartoes_amarelos
 
     def cartoes_vermelhos(self, jogador):
         cartoes_lista = []
@@ -137,7 +139,8 @@ class ControladorPartida:
             cartoes_vermelhos = '0' + str(cartoes_vermelhos)
         else: 
             cartoes_vermelhos = str(cartoes_vermelhos)
-        return cartoes_vermelhos    
+        jogador.cartoes_vermelhos = cartoes_vermelhos    
+        return jogador.cartoes_vermelhos
     
     def qtd_partidas(self):
         qtd = 0
