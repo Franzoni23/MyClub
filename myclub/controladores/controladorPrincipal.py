@@ -7,6 +7,7 @@ from myclub.limites.telaCartoesVermelhos import TelaCartoesVermelhos
 from myclub.limites.telaCadastraJogador import TelaCadastraJogador
 import sys
 import datetime
+import copy
 
 
 class ControladorPrincipal:
@@ -39,13 +40,13 @@ class ControladorPrincipal:
         lista_print = []
         for jogador in self.__jogadores.get_all():  
             if jogador.posicao == 'Goleiro':
-                cartoes_amarelos = jogador.cartoes_amarelos
-                cartoes_vermelhos = jogador.cartoes_vermelhos
-                gols = jogador.gols
+                cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(jogador)
+                cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(jogador)
+                gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
                 posicao = 'G'
-                qtd_partidas = jogador.qtd_partidas
+                qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                      
         lista_print.sort()
         return lista_print
@@ -54,13 +55,13 @@ class ControladorPrincipal:
         lista_print = []
         for jogador in self.__jogadores.get_all():  
             if jogador.posicao == 'Lateral':
-                cartoes_amarelos = jogador.cartoes_amarelos
-                cartoes_vermelhos = jogador.cartoes_vermelhos
-                gols = jogador.gols
+                cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(jogador)
+                cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(jogador)
+                gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'L'
-                qtd_partidas = jogador.qtd_partidas
+                posicao = 'G'
+                qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                      
         lista_print.sort()
         return lista_print
@@ -69,13 +70,13 @@ class ControladorPrincipal:
         lista_print = []
         for jogador in self.__jogadores.get_all():  
             if jogador.posicao == 'Zagueiro':
-                cartoes_amarelos = jogador.cartoes_amarelos
-                cartoes_vermelhos = jogador.cartoes_vermelhos
-                gols = jogador.gols
+                cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(jogador)
+                cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(jogador)
+                gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'Z'
-                qtd_partidas = jogador.qtd_partidas
+                posicao = 'G'
+                qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                        
         lista_print.sort()
         return lista_print
@@ -84,14 +85,14 @@ class ControladorPrincipal:
         lista_print = []
         for jogador in self.__jogadores.get_all():  
             if jogador.posicao == 'Volante':
-                cartoes_amarelos = jogador.cartoes_amarelos
-                cartoes_vermelhos = jogador.cartoes_vermelhos
-                gols = jogador.gols
-                nome = jogador.nome.ljust(46)
-                idade = jogador.idade
-                posicao = 'V'
-                qtd_partidas = jogador.qtd_partidas
-                lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                        
+               cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(jogador)
+               cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(jogador)
+               gols = self.__sistema_geral.controlador_partida.gols(jogador)
+               nome = jogador.nome.ljust(46)
+               idade = jogador.idade
+               posicao = 'G'
+               qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
+               lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                        
         lista_print.sort()
         return lista_print
 
@@ -99,13 +100,13 @@ class ControladorPrincipal:
         lista_print = []
         for jogador in self.__jogadores.get_all():  
             if jogador.posicao == 'Meia':
-                cartoes_amarelos = jogador.cartoes_amarelos
-                cartoes_vermelhos = jogador.cartoes_vermelhos
-                gols = jogador.gols
+                cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(jogador)
+                cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(jogador)
+                gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'M'
-                qtd_partidas = jogador.qtd_partidas
+                posicao = 'G'
+                qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                      
         lista_print.sort()
         return lista_print
@@ -114,13 +115,13 @@ class ControladorPrincipal:
         lista_print = []
         for jogador in self.__jogadores.get_all():  
             if jogador.posicao == 'Atacante':
-                cartoes_amarelos = jogador.cartoes_amarelos
-                cartoes_vermelhos = jogador.cartoes_vermelhos
-                gols = jogador.gols
+                cartoes_amarelos = self.__sistema_geral.controlador_partida.cartoes_amarelos(jogador)
+                cartoes_vermelhos = self.__sistema_geral.controlador_partida.cartoes_vermelhos(jogador)
+                gols = self.__sistema_geral.controlador_partida.gols(jogador)
                 nome = jogador.nome.ljust(46)
                 idade = jogador.idade
-                posicao = 'A'
-                qtd_partidas = jogador.qtd_partidas
+                posicao = 'G'
+                qtd_partidas = self.__sistema_geral.controlador_partida.qtd(jogador)
                 lista_print.append(jogador.numero + " " + nome + str(idade) + "    " + str(posicao) + "       " + str(qtd_partidas) + "     " + str(gols) + "     " + str(cartoes_amarelos) + "     " + str(cartoes_vermelhos))                       
         lista_print.sort()
         return lista_print
@@ -214,6 +215,11 @@ class ControladorPrincipal:
             self.__tela.popup_ok('Preencha o nome.')
             dados_jogador = {'nome': nome, 'numero': numero, 'dia': dia, 'mes': mes, 'ano': ano, 'posicao': posicao}
             self.criar_jogador(dados_jogador)
+        for jogador in self.jogadores.get_all():
+            if nome == jogador.nome:
+                self.__tela.popup_ok('Já existe um jogador com esse nome.')
+                dados_jogador = {'nome':'', 'numero': numero, 'dia': dia, 'mes': mes, 'ano': ano, 'posicao': posicao}
+                self.criar_jogador(dados_jogador)
         #Ajeita Nome
         preposicoes = ['da', 'de', 'di', 'do', 'du', 'para']
         partes_nome = []
@@ -276,6 +282,7 @@ class ControladorPrincipal:
             self.voltar()
         jogador_key = jogador[0][0:2]
         jogador = self.__jogadores.get(jogador_key)
+        jogador_alterar = jogador
         dados_jogador = {'nome': jogador.nome, 'numero': jogador.numero, 'dia': jogador.nascimento[:2], 'mes': jogador.nascimento[3:5], 'ano': jogador.nascimento[6:10], 'posicao': jogador.posicao}
         button, values = self.__tela_cadastro.abre_tela(dados_jogador)
         if button == None:
@@ -292,12 +299,18 @@ class ControladorPrincipal:
             ano = values['5']
             posicao = values['6']
             if decisao == 'Yes':
+                jogador = Jogador(jogador.nome, jogador.numero, jogador.nascimento, jogador.posicao)
                 self.__jogadores.remove(jogador_key)
                 #Valida Nome
                 if nome == '':
                     self.__tela.popup_ok('Preencha o nome.')
                     dados_jogador = {'nome': nome, 'numero': numero, 'dia': dia, 'mes': mes, 'ano': ano, 'posicao': posicao}
                     self.criar_jogador(dados_jogador)
+                for jogador in self.jogadores.get_all():
+                    if nome == jogador.nome:
+                        self.__tela.popup_ok('Já existe um jogador com esse nome.')
+                        dados_jogador = {'nome':'', 'numero': numero, 'dia': dia, 'mes': mes, 'ano': ano, 'posicao': posicao}
+                        self.criar_jogador(dados_jogador)
                 #Ajeita Nome
                 preposicoes = ['da', 'de', 'di', 'do', 'du', 'para']
                 partes_nome = []
@@ -338,8 +351,12 @@ class ControladorPrincipal:
                 nascimento = dia + "/" + mes + "/" + ano
                 novo_jogador = Jogador(nome, numero, nascimento, posicao)
                 self.__jogadores.add(novo_jogador.numero, novo_jogador)
+                self.__sistema_geral.controlador_partida.atualiza_partidas(jogador_alterar, novo_jogador)
                 self.__tela.popup_ok('Jogador registrado com sucesso!')
                 self.voltar()
             else:
                 dados_jogador = {'nome': nome, 'numero': numero, 'dia': dia, 'mes': mes, 'ano': ano, 'posicao': posicao}
                 self.criar_jogador(dados_jogador)
+
+  
+

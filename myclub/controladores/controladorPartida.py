@@ -31,7 +31,6 @@ class ControladorPartida:
     def presentes_tela(self):
         return self.__presentes_tela
 
-    
     def finalizar(self):
         sys.exit(0)
     
@@ -41,7 +40,95 @@ class ControladorPartida:
         self.opcoes()
     
     def voltar_inicio(self):
-        return self.__sistema_geral.inicio()
+        return self.__sistema_geral.inicio()  
+    
+    def atualiza_partidas(self, jogador_alterar, novo_jogador):
+        partidas = []
+        for partida in self.partidas.get_all():
+            partidas.append(partida)
+            for partida in partidas:
+                for presente in partida.presentes:
+                    if presente.numero == jogador_alterar.numero:
+                        partida.presentes.remove(presente)
+                        nome = novo_jogador.nome
+                        numero = novo_jogador.numero
+                        gols = presente.gols
+                        cartoes_amarelos = presente.cartoes_amarelos
+                        cartoes_vermelhos = presente.cartoes_vermelhos
+                        novo_presente = Presente(nome, numero, gols, cartoes_amarelos, cartoes_vermelhos)
+                        partida.presentes.append(novo_presente)
+                for presente in partida.presentes_tela:
+                    if presente[:2] == jogador_alterar.numero:
+                        partida.presentes_tela.remove(presente)
+                        partida.presentes_tela.append(novo_jogador.numero + " " + novo_jogador.nome)
+        for partida in partidas:
+            partida.lista_gols = []
+            partida.lista_cartoes_amarelos = []
+            partida.lista_cartoes_vermelhos = []
+            partida.listar_gols()
+            partida.listar_cartoes_amarelos()
+            partida.listar_cartoes_vermelhos()
+            self.partidas.remove(partida.data)
+            self.partidas.add(partida.data, partida)
+    
+    def qtd(self, jogador):
+        qtd = 0
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                if presente.nome == jogador.nome:
+                    qtd = qtd + 1
+        if qtd < 10:
+            qtd = '00' + str(qtd)
+        elif qtd >= 10 and qtd < 100:
+            qtd = '0' + str(qtd)
+        else:
+            qtd = str(qtd)
+        return qtd
+    
+    def gols(self, jogador):
+        gols_lista = []
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                if presente.nome == jogador.nome:
+                    gols_lista.append(presente.gols)
+        gols = sum(gols_lista)
+        if gols < 10:
+            gols = '00' + str(gols)
+        elif gols >= 10 and gols < 100:
+            gols = '0' + str(gols)
+        else:
+            gols = str(gols)
+        return gols
+    
+    def cartoes_amarelos(self, jogador):
+        cartoes_lista = []
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                if presente.nome == jogador.nome:
+                    cartoes_lista.append(presente.cartoes_amarelos)
+        cartoes_amarelos = sum(cartoes_lista)
+        if cartoes_amarelos < 10:
+            cartoes_amarelos = '00' + str(cartoes_amarelos)
+        elif cartoes_amarelos >= 10 and cartoes_amarelos < 100:
+            cartoes_amarelos = '0' + str(cartoes_amarelos)
+        else:
+            cartoes_amarelos = str(cartoes_amarelos)
+        return cartoes_amarelos
+
+    def cartoes_vermelhos(self, jogador):
+        cartoes_lista = []
+        for partida in self.__sistema_geral.controlador_partida.partidas.get_all():
+            for presente in partida.presentes:
+                if presente.nome == jogador.nome:
+                    cartoes_lista.append(presente.cartoes_vermelhos)
+        cartoes_vermelhos = sum(cartoes_lista)
+        if cartoes_vermelhos < 10:
+            cartoes_vermelhos = '00' + str(cartoes_vermelhos)
+        elif cartoes_vermelhos >= 10 and cartoes_vermelhos < 100:
+            cartoes_vermelhos = '0' + str(cartoes_vermelhos)
+        else: 
+            cartoes_vermelhos = str(cartoes_vermelhos)
+        return cartoes_vermelhos    
     
     def qtd_partidas(self):
         qtd = 0
@@ -284,25 +371,13 @@ class ControladorPartida:
             nova_partida.listar_cartoes_amarelos()
             nova_partida.listar_cartoes_vermelhos()
             self.partidas.add(nova_partida.data, nova_partida)
-            lista_jogadores = []
-            for jogador in self.__sistema_geral.controlador_principal.jogadores.get_all():
-                for presente in self.presentes:
-                    if presente.nome == jogador.nome:
-                        lista_jogadores.append(jogador)
-            for jogador in lista_jogadores:
-                jogador.partidas.append(nova_partida)
-                jogador.atualiza_gols()
-                jogador.atualiza_cartoes_amarelos()
-                jogador.atualiza_cartoes_vermelhos()
-                self.__sistema_geral.controlador_principal.jogadores.remove(jogador.numero)
-                self.__sistema_geral.controlador_principal.jogadores.add(jogador.numero, jogador)
         self.__tela.popup_ok('Partida regristrada com sucesso!')
         self.voltar()
 
     def adiciona_presente(self, jogador, dados_jogador, dados_partida):
         if jogador == []:
             self.__tela_cadastro.popup_ok('Selecione um jogador para adicionar.')
-            self.criar_partida('vazio', self.presentes_tela)
+            self.criar_partida(dados_partida, self.presentes_tela)
         jogador_key = jogador[0][0:2]
         jogador = self.__sistema_geral.controlador_principal.jogadores.get(jogador_key)
         nome = jogador.nome
@@ -464,34 +539,10 @@ class ControladorPartida:
                 nova_partida.listar_cartoes_amarelos()
                 nova_partida.listar_cartoes_vermelhos()
                 self.partidas.add(nova_partida.data, nova_partida)
-                lista_deletados = []
-                lista_jogadores = []
-                if jogador_deletar != 'vazio':
-                    lista_deletados.append(jogador_deletar)
-                for presente in self.presentes:
-                    lista_jogadores.append(self.__sistema_geral.controlador_principal.jogadores.get(presente.numero))
-                for jogador in lista_jogadores:
-                    for partida in jogador.partidas:
-                        if str(partida_key) == str(partida.data):
-                            jogador.partidas.remove(partida)
-                    jogador.partidas.append(nova_partida)
-                    jogador.atualiza_gols()
-                    jogador.atualiza_cartoes_amarelos()
-                    jogador.atualiza_cartoes_vermelhos()
-                    self.__sistema_geral.controlador_principal.jogadores.remove(jogador.numero)
-                    self.__sistema_geral.controlador_principal.jogadores.add(jogador.numero, jogador)
-                for jogador in lista_deletados:
-                    if jogador != None:
-                        for partida in jogador.partidas:
-                            if str(partida_key) == str(partida.data):
-                                jogador.partidas.remove(partida)
-                        jogador.atualiza_gols()
-                        jogador.atualiza_cartoes_amarelos()
-                        jogador.atualiza_cartoes_vermelhos()
-                        self.__sistema_geral.controlador_principal.jogadores.remove(jogador.numero)
-                        self.__sistema_geral.controlador_principal.jogadores.add(jogador.numero, jogador)
                 self.__tela.popup_ok('Partida alterada com sucesso!')
                 self.voltar()
+            else:
+                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
     
     def alterar_partida(self, partida):
         if partida == []:
@@ -583,23 +634,10 @@ class ControladorPartida:
                 nova_partida.listar_cartoes_amarelos()
                 nova_partida.listar_cartoes_vermelhos()
                 self.partidas.add(nova_partida.data, nova_partida)
-                lista_jogadores = []
-                for jogador in self.__sistema_geral.controlador_principal.jogadores.get_all():
-                    for presente in self.presentes:
-                        if jogador.nome == presente:
-                            lista_jogadores.append(jogador)
-                for jogador in lista_jogadores:
-                    for partida in jogador.partidas:
-                        if partida.data == partida_key:
-                            jogador.partidas.remove(partida)
-                    jogador.partidas.append(nova_partida)
-                    jogador.atualiza_gols()
-                    jogador.atualiza_cartoes_amarelos()
-                    jogador.atualiza_cartoes_vermelhos()
-                    self.__sistema_geral.controlador_principal.jogadores.remove(jogador.numero)
-                    self.__sistema_geral.controlador_principal.jogadores.add(jogador.numero, jogador)
                 self.__tela.popup_ok('Partida alterada com sucesso!')
-            self.voltar()
+                self.voltar()
+            else:
+                self.criar_partida2(dados_partida, self.presentes_tela, partida_key, 'vazio')
                   
     def excluir_partida(self, partida):
         if partida == []:
@@ -608,18 +646,6 @@ class ControladorPartida:
         partida_key = partida[0][0:10]
         quer_apagar = self.__tela.confirm('Você tem certeza que deseja excluir a partida ?')
         if quer_apagar == 'Yes':
-            lista_jogadores = []
-            for jogador in self.__sistema_geral.controlador_principal.jogadores.get_all():
-                lista_jogadores.append(jogador)
-            for jogador in lista_jogadores:
-                for partida in jogador.partidas:
-                    if partida.data == partida_key:
-                        jogador.partidas.remove(partida)
-                jogador.atualiza_gols()
-                jogador.atualiza_cartoes_amarelos()
-                jogador.atualiza_cartoes_vermelhos()
-                self.__sistema_geral.controlador_principal.jogadores.remove(jogador.numero)
-                self.__sistema_geral.controlador_principal.jogadores.add(jogador.numero, jogador)
             self.__partidas.remove(partida_key)
             self.voltar()
         else:

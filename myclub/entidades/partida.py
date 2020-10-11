@@ -67,6 +67,18 @@ class Partida:
     def lista_cartoes_vermelhos(self):
         return self.__lista_cartoes_vermelhos
     
+    @lista_gols.setter
+    def lista_gols(self, nova_lista):
+        self.__lista_gols = nova_lista
+
+    @lista_cartoes_amarelos.setter
+    def lista_cartoes_amarelos(self, nova_lista):
+        self.__lista_cartoes_amarelos = nova_lista
+
+    @lista_cartoes_vermelhos.setter
+    def lista_cartoes_vermelhos(self, nova_lista):
+        self.__lista_cartoes_vermelhos = nova_lista
+    
     def listar_gols(self):
         for presente in self.presentes:
             if presente.gols > 0:
