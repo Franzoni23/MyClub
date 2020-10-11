@@ -45,6 +45,7 @@ class ControladorPartida:
     def voltar(self):
         self.__presentes = []
         self.__presentes_tela = []
+        self.__gols_mandante = 0
         self.opcoes()
     
     def voltar_inicio(self):
